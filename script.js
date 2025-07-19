@@ -1,22 +1,34 @@
 
-let livres = [
-    { titre: "Harry Potter", author: "J.K. Rowling", year: 1997 },
-    { titre: "Le Petit Prince", author: "Saint-Exupéry", year: 1943 }
-];
+
+let livres = [];
+let texte = JSON.stringify(livres);
 
 
 
 document.getElementById("show").addEventListener("click", function () {
-    let ul = document.createElement("ul");
-    livres.forEach(function (livre) {
-        let li = document.createElement("li");
-        li.textContent = `${livre.titre} written by ${livre.author} in ${livre.year}`;
-        ul.appendChild(li);
-    });
-    document.getElementById("list").innerHTML = "";
-    document.getElementById("list").appendChild(ul);
-});
+    let recup = localStorage.getItem("livres");
+    if (recup) {
+        livres = JSON.parse(recup);
+        if (livres.length === 0) {
+            document.getElementById("list").textContent = "No books found.";
+        } else {
 
+            let ul = document.createElement("ul");
+            livres.forEach(function (livre) {
+                let li = document.createElement("li");
+                li.textContent = `${livre.titre} written by ${livre.author} in ${livre.year}`;
+                ul.appendChild(li);
+            });
+            document.getElementById("list").innerHTML = "";
+            document.getElementById("list").appendChild(ul);
+        };
+
+    } else {
+        document.getElementById("list").innerHTML = "";
+        document.getElementById("list").innerHTML = `No library on ° livres ° found ! <br> Please add one !`;
+    };
+
+});
 
 
 
@@ -24,19 +36,59 @@ document.getElementById("add").addEventListener("click", function () {
     let titre = document.getElementById("title").value.trim();
     let author = document.getElementById("author").value.trim();
     let year = document.getElementById("year").value.trim();
+    if (titre && author && year) {
+        let recup = localStorage.getItem("livres");
+        if (recup) {
+            livres = JSON.parse(recup);
+            livres.push({ titre: titre, author: author, year: year });
+            localStorage.setItem("livres", JSON.stringify(livres));
+            alert("Book added !");
 
-    livres.push({ titre: titre, author: author, year: year });
+        } else {
+            livres.push({ titre: titre, author: author, year: year });
+            localStorage.setItem("livres", JSON.stringify(livres));
+            alert("Book added !!");
+        };
+    } else {
+        alert("Please enter all the infos.");
+    };
 });
 
 
 
 document.getElementById("find").addEventListener("click", function () {
     let search = document.getElementById("search").value.trim();
-    for (let livre in livres) {
-        if (livres[livre]["titre"] == search) {
-            document.getElementById("result").textContent = `${livres[livre]["titre"]} written by ${livres[livre]["author"]} in ${livres[livre]["year"]}`;
+    let found = false;
+    if (search) {
+
+        let recup = localStorage.getItem("livres");
+        if (recup) {
+
+            livres = JSON.parse(recup);
+            if (livres.length === 0) {
+
+                document.getElementById("result").textContent = "Empty library.";
+            } else {
+
+                for (let livre in livres) {
+                    if (livres[livre]["titre"] == search) {
+                        document.getElementById("result").textContent = `${livres[livre]["titre"]} written by ${livres[livre]["author"]} in ${livres[livre]["year"]}`;
+                        found = true;
+                        break;
+                    };
+                };
+                if (!found) {
+                    document.getElementById("result").textContent = "Book not found.";
+                }
+            };
+        } else {
+            document.getElementById("result").textContent = "No library found.";
         };
+
+    } else {
+        alert("Please enter the title !");
     };
+
 });
 
 
@@ -46,49 +98,3 @@ document.getElementById("find").addEventListener("click", function () {
 
 
 
-
-
-
-
-
-
-
-
-
-/*
-////////////
-
-let livres = [];
-localStorage.setItem("MesLivres", JSON.stringify(livres));
-
-
-let recup = localStorage.getItem("MesLivres");
-let tab = recup ? JSON.parse(recup) : [];
-
-if (!Array.isArray(tab)) tab = [];
-
-tab.push({ titre: "Livre ajouté" });
-localStorage.setItem("MesLivres", JSON.stringify(tab));
-//////////
-
-
-
-//////
-let texte = JSON.stringify(mesLivres);
-
-localStorage.setItem("Mes Livres", texte);
-
-
-
-let Recup = localStorage.getItem("Mes Livres");
-
-let Tableau = Recup ? JSON.parse(Recup) : [];
-
-console.log(Array.isArray(Tableau));
-Tableau = [];
-console.log(Array.isArray(Tableau));
-
-Tableau.push({ titre: "Nouveau", auteur: "Quelqu’un", annee: 2025 });
-localStorage.setItem("MesLivres", JSON.stringify(Tableau));
-//////
-*/
