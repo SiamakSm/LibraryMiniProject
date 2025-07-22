@@ -96,5 +96,39 @@ document.getElementById("find").addEventListener("click", function () {
 
 
 
+document.getElementById("searchR").addEventListener("input", function () {
+
+    let query = document.getElementById("searchR").value.trim().toLowerCase();
+    let recup = localStorage.getItem("livres");
+    if (query === "") {
+        document.getElementById("listR").innerHTML = "";
+        document.getElementById("resultR").textContent = "";
+        return;
+    };
+    if (recup) {
+        livres = JSON.parse(recup);
+        let filtered = livres.filter(book => book.titre.toLowerCase().includes(query));
+        document.getElementById("listR").innerHTML = "";
+
+        if (filtered.length === 0) {
+            document.getElementById("resultR").textContent = "No matching books.";
+            document.getElementById("listR").innerHTML = "";
+
+        } else {
+            document.getElementById("resultR").textContent = "";
+            let ul = document.createElement("ul");
+            filtered.forEach(book => {
+                let li = document.createElement("li");
+                li.textContent = `${book.titre} written by ${book.author} in ${book.year}`;
+                ul.appendChild(li);
+            });
+            document.getElementById("listR").appendChild(ul);
+
+        };
+    } else {
+        document.getElementById("resultR").textContent = "No library matches!";
+    };
+
+});
 
 
