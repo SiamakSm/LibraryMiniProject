@@ -1,8 +1,6 @@
 
 
 let livres = [];
-let texte = JSON.stringify(livres);
-
 
 
 document.getElementById("show").addEventListener("click", function () {
