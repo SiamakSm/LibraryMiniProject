@@ -8,7 +8,6 @@ let resultR = document.getElementById("resultR");
 let listR = document.getElementById("listR");
 
 let livres = [];
-<<<<<<< HEAD
 let texte = JSON.stringify(livres);
 
 show.addEventListener("click", function () {                 // To show the list of books
@@ -20,20 +19,6 @@ show.addEventListener("click", function () {                 // To show the list
         } else {                                             // if there are at least one book
             let ul = document.createElement("ul");           
             livres.forEach(function (livre) {                // For each book of books, make a "li", and add it to "ul"
-=======
-
-
-document.getElementById("show").addEventListener("click", function () {
-    let recup = localStorage.getItem("livres");
-    if (recup) {
-        livres = JSON.parse(recup);
-        if (livres.length === 0) {
-            document.getElementById("list").textContent = "No books found.";
-        } else {
-
-            let ul = document.createElement("ul");
-            livres.forEach(function (livre) {
->>>>>>> 0ce03cacca8fd5662d0781398149f5659ac942d0
                 let li = document.createElement("li");
                 li.textContent = `${livre.titre} written by ${livre.author} in ${livre.year}`;
                 ul.appendChild(li);
