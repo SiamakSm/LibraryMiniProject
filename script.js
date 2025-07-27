@@ -1,50 +1,55 @@
-
+let show = document.getElementById("show");
+let list = document.getElementById("list");
+let add = document.getElementById("add");
+let find = document.getElementById("find");
+let result = document.getElementById("result");
+let searchR = document.getElementById("searchR");
+let resultR = document.getElementById("resultR");
+let listR = document.getElementById("listR");
 
 let livres = [];
 let texte = JSON.stringify(livres);
 
-
-
-document.getElementById("show").addEventListener("click", function () {
-    let recup = localStorage.getItem("livres");
-    if (recup) {
-        livres = JSON.parse(recup);
-        if (livres.length === 0) {
-            document.getElementById("list").textContent = "No books found.";
-        } else {
-
-            let ul = document.createElement("ul");
-            livres.forEach(function (livre) {
+show.addEventListener("click", function () {                 // To show the list of books
+    let recup = localStorage.getItem("livres");              // To load the library "livres" on the local storage  
+    if (recup) {                                             // If there is a library
+        livres = JSON.parse(recup);                          // Put it into the list "livres"
+        if (livres.length === 0) {                           // if there is no books
+            list.textContent = "No books found.";
+        } else {                                             // if there are at least one book
+            let ul = document.createElement("ul");           
+            livres.forEach(function (livre) {                // For each book of books, make a "li", and add it to "ul"
                 let li = document.createElement("li");
                 li.textContent = `${livre.titre} written by ${livre.author} in ${livre.year}`;
                 ul.appendChild(li);
             });
-            document.getElementById("list").innerHTML = "";
-            document.getElementById("list").appendChild(ul);
+            list.innerHTML = "";
+            list.appendChild(ul);
         };
 
-    } else {
-        document.getElementById("list").innerHTML = "";
-        document.getElementById("list").innerHTML = `No library on ° livres ° found ! <br> Please add one !`;
+    } else {                                                // If there is no library "livres"
+        list.innerHTML = "";
+        list.innerHTML = `No library on ° livres ° found ! <br> Please add one !`;
     };
 
 });
 
 
 
-document.getElementById("add").addEventListener("click", function () {
+add.addEventListener("click", function () {                        // to add a book            
     let titre = document.getElementById("title").value.trim();
     let author = document.getElementById("author").value.trim();
     let year = document.getElementById("year").value.trim();
-    if (titre && author && year) {
+
+    if (titre && author && year) {                                  // if all inputs are available
         let recup = localStorage.getItem("livres");
         if (recup) {
-            livres = JSON.parse(recup);
-            livres.push({ titre: titre, author: author, year: year });
-            localStorage.setItem("livres", JSON.stringify(livres));
+            livres = JSON.parse(recup);       
+            livres.push({ titre: titre, author: author, year: year }); // add the book to the local storage
+            localStorage.setItem("livres", JSON.stringify(livres));    // update the local storage
             alert("Book added !");
 
-        } else {
+        } else {                                                       
             livres.push({ titre: titre, author: author, year: year });
             localStorage.setItem("livres", JSON.stringify(livres));
             alert("Book added !!");
@@ -56,33 +61,28 @@ document.getElementById("add").addEventListener("click", function () {
 
 
 
-document.getElementById("find").addEventListener("click", function () {
+find.addEventListener("click", function () {                                // search by a titile of a book
     let search = document.getElementById("search").value.trim();
     let found = false;
     if (search) {
 
-        let recup = localStorage.getItem("livres");
+        let recup = localStorage.getItem("livres");                          // load storage
         if (recup) {
-
             livres = JSON.parse(recup);
             if (livres.length === 0) {
-
-                document.getElementById("result").textContent = "Empty library.";
+                result.textContent = "Empty library.";
             } else {
-
-                for (let livre in livres) {
+                for (let livre in livres) {                                    // parse the list and get all books with the title given
                     if (livres[livre]["titre"] == search) {
-                        document.getElementById("result").textContent = `${livres[livre]["titre"]} written by ${livres[livre]["author"]} in ${livres[livre]["year"]}`;
+                        result.textContent = `${livres[livre]["titre"]} written by ${livres[livre]["author"]} in ${livres[livre]["year"]}`;
                         found = true;
                         break;
                     };
                 };
-                if (!found) {
-                    document.getElementById("result").textContent = "Book not found.";
-                }
+                if (!found) { result.textContent = "Book not found."; };
             };
         } else {
-            document.getElementById("result").textContent = "No library found.";
+            result.textContent = "No library found.";
         };
 
     } else {
@@ -94,39 +94,37 @@ document.getElementById("find").addEventListener("click", function () {
 
 
 
+searchR.addEventListener("input", function () {
 
-
-document.getElementById("searchR").addEventListener("input", function () {
-
-    let query = document.getElementById("searchR").value.trim().toLowerCase();
+    let query = searchR.value.trim().toLowerCase();
     let recup = localStorage.getItem("livres");
     if (query === "") {
-        document.getElementById("listR").innerHTML = "";
-        document.getElementById("resultR").textContent = "";
+        listR.innerHTML = "";
+        resultR.textContent = "";
         return;
     };
     if (recup) {
         livres = JSON.parse(recup);
         let filtered = livres.filter(book => book.titre.toLowerCase().includes(query));
-        document.getElementById("listR").innerHTML = "";
+        listR.innerHTML = "";
 
         if (filtered.length === 0) {
-            document.getElementById("resultR").textContent = "No matching books.";
-            document.getElementById("listR").innerHTML = "";
+            resultR.textContent = "No matching books.";
+            listR.innerHTML = "";
 
         } else {
-            document.getElementById("resultR").textContent = "";
+            resultR.textContent = "";
             let ul = document.createElement("ul");
             filtered.forEach(book => {
                 let li = document.createElement("li");
                 li.textContent = `${book.titre} written by ${book.author} in ${book.year}`;
                 ul.appendChild(li);
             });
-            document.getElementById("listR").appendChild(ul);
+            listR.appendChild(ul);
 
         };
     } else {
-        document.getElementById("resultR").textContent = "No library matches!";
+        resultR.textContent = "No library matches!";
     };
 
 });
